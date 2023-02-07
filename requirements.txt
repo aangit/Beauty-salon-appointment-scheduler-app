@@ -1,0 +1,9 @@
+mysql-connector-python
+SQLAlchemy
+sqlalchemy-utils
+fastapi[all]~=0.89.1
+fastapi-utils
+PYMYSQL
+uvicorn~=0.20.0
+pydantic~=1.10.4
+cryptography
