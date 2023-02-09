@@ -1,4 +1,4 @@
-from app.user_type.repository import user_type_repository
+# from app.user_type.repository import user_type_repository
 from app.user_type.repository.user_type_repository import UserTypeRepository
 from app.db.database import SessionLocal
 from app.user_type.exceptions import *

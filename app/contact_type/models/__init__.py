@@ -1,0 +1,1 @@
+from .contact_type import ContactType

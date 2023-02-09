@@ -1,0 +1,2 @@
+import imp
+from .contact_type_repository import ContactTypeRepository
