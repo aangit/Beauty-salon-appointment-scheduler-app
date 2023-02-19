@@ -43,8 +43,6 @@ def delete_appointment_by_id(appointment_id: str):
 
 @appointment_router.put("/cancel-appointment", response_model = AppointmentSchema)
 def cancel_appointement(appointment_id: str, credentials = Depends(JWTBearer("customer"))):
-    print("************************************************************************************")
-    print(credentials)
     return AppointmentController.cancel_appointement(appointment_id, credentials)
 
 @appointment_router.put("/accept-appointment", response_model = AppointmentSchema)
