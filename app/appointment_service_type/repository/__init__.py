@@ -1,0 +1,1 @@
+from .appointment_service_type_repository import AppointmentServiceTypeRepository

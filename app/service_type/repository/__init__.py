@@ -1,0 +1,1 @@
+from .service_type_repository import ServiceTypeRepository
