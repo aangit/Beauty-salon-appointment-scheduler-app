@@ -1,6 +1,6 @@
 from app.contact_type.repository import ContactTypeRepository
 from app.db.database import SessionLocal
-from app.contact_type.exceptions import *
+from app.contact_type.exceptions import ContactTypeExists, ContactTypeNotFound
 
 class ContactTypeServices:
     @staticmethod
@@ -11,7 +11,7 @@ class ContactTypeServices:
                 c_type = contact_type_repository.read_contact_type_by_type(contact_type)
                 if c_type is None:
                     return contact_type_repository.create_contact_type(contact_type)      
-                raise ContactTypeExistsException(message="Contact type already exists in database.", code=400)
+                raise ContactTypeExists(message="Contact type already exists in database.", code=400)
         except Exception as e:
             raise e
 

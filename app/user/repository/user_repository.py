@@ -1,5 +1,7 @@
+
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
+
 from app.user.models import User
 
 
@@ -17,7 +19,7 @@ class UserRepository:
             return user
         except IntegrityError as e:
             raise e
-            
+
     def create_super_user(self, email, password):
         try:
             user = User(email=email, password=password)
@@ -36,7 +38,7 @@ class UserRepository:
         users = self.db.query(User).all()
         return users
 
-    def delete_user_by_id(self, user_id:str):
+    def delete_user_by_id(self, user_id: str):
         try:
             user = self.db.query(User).filter(User.id == user_id).first()
             self.db.delete(user)
@@ -48,3 +50,9 @@ class UserRepository:
     def read_user_by_email(self, email: str):
         user = self.db.query(User).filter(User.email == email).first()
         return user
+
+    def get_all_users_by_type(self, user_type_id: str):
+        return self.db.query(User).filter(User.user_type_id == user_type_id).all()
+
+    def employee_has_skills(self, employee_id: str):
+        return self.db.query(User).filter(User.id == employee_id).first()

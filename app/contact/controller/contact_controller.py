@@ -1,7 +1,9 @@
 from sqlalchemy.exc import IntegrityError
 from app.contact.service import ContactServices
 from fastapi import HTTPException, Response
-# from app.users.exceptions import UserInvalidePassword
+from app.user.exceptions import UserNotFound
+from app.contact_type.exceptions import ContactTypeNotFound
+from app.contact.exceptions import ContactNotFound
 
 class ContactController:
     @staticmethod
@@ -9,8 +11,10 @@ class ContactController:
         try:
             contact = ContactServices.create_contact(contact_title, user_id, contact_type_id) 
             return contact
-        except IntegrityError as e:
-            raise HTTPException(status_code=400, detail=f"Contact {contact_title} already exists.")
+        except UserNotFound as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
+        except ContactTypeNotFound as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
 
@@ -32,5 +36,8 @@ class ContactController:
         try:
             ContactServices.delete_contact_by_id(contact_id)
             return Response(content=f"Contact with id - {contact_id} is deleted")
+        except ContactNotFound as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
+

@@ -1,9 +1,8 @@
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
-from app import contact_type
-from app.contact_type.exceptions.contact_type_exceptions import ContactTypeNotFoundException
+from app.contact_type.exceptions import ContactTypeNotFound
 from app.contact_type.models import ContactType
-# from app.user_type.exceptions import UserTypeNotFoundException
+
 
 class ContactTypeRepository:
 
@@ -23,7 +22,7 @@ class ContactTypeRepository:
     def read_contact_type_by_id(self, contact_type_id: str):
         contact_type= self.db.query(ContactType).filter(ContactType.id == contact_type_id).first()
         if contact_type is None:
-            raise ContactTypeNotFoundException(f"Contact type with provided ID: {contact_type_id} not found.", 400)
+            raise ContactTypeNotFound(f"Contact type with provided ID: {contact_type_id} not found.", 400)
         return contact_type
 
     def read_contact_type_by_type(self, contact_type: str):
@@ -38,7 +37,7 @@ class ContactTypeRepository:
         try:
             contact_type = self.db.query(ContactType).filter(ContactType.id == contact_type_id).first()
             if contact_type is None:
-                raise  ContactTypeNotFoundException(f"Contact type with provided ID: {contact_type_id} not found", 400)
+                raise  ContactTypeNotFound(f"Contact type with provided ID: {contact_type_id} not found", 400)
             self.db.delete(contact_type)
             self.db.commit()
             return True
@@ -49,7 +48,7 @@ class ContactTypeRepository:
         try:
             c_type = self.db.query(ContactType).filter(ContactType.id == contact_type_id).first()
             if c_type is None:
-                raise ContactTypeNotFoundException(f"Contact type with provided ID: {contact_type_id} not found", 400) 
+                raise ContactTypeNotFound(f"Contact type with provided ID: {contact_type_id} not found", 400) 
             c_type.contact_type = contact_type
             self.db.add(c_type)
             self.db.commit()

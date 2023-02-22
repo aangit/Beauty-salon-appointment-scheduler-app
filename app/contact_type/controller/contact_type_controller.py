@@ -1,5 +1,5 @@
 from app.contact_type.services.contact_type_services import ContactTypeServices
-from app.contact_type.exceptions import *
+from app.contact_type.exceptions import ContactTypeExists, ContactTypeNotFound
 from fastapi import HTTPException, Response
 
 
@@ -11,7 +11,7 @@ class ContactTypeController:
             c_type = ContactTypeServices.create_contact_type(contact_type)      
             return c_type
 
-        except ContactTypeExistsException as e:
+        except ContactTypeExists as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
@@ -22,7 +22,7 @@ class ContactTypeController:
             contact_type = ContactTypeServices.get_contact_type_by_id(contact_type_id) 
             if contact_type:
                 return contact_type
-        except ContactTypeNotFoundException as e:
+        except ContactTypeNotFound as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
@@ -33,7 +33,7 @@ class ContactTypeController:
             contact_type = ContactTypeServices.get_contact_type_by_id(contact_type_name)
             if contact_type:
                 return contact_type
-        except ContactTypeNotFoundException as e:
+        except ContactTypeNotFound as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
@@ -49,7 +49,7 @@ class ContactTypeController:
         try:
             ContactTypeServices.delete_contact_type_by_id(contact_type_id)     
             return Response(content=f"Contact type with id - {contact_type_id} is deleted")
-        except ContactTypeNotFoundException as e:
+        except ContactTypeNotFound as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
@@ -59,7 +59,7 @@ class ContactTypeController:
         try:
             c_type = ContactTypeServices.update_contact_type(contact_type_id, contact_type)     
             return c_type
-        except ContactTypeNotFoundException as e:
+        except ContactTypeNotFound as e:
             raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

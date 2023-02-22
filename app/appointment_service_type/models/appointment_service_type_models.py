@@ -1,6 +1,5 @@
 from app.db.database import Base
 from sqlalchemy import Column, String, ForeignKey
-# from uuid import uuid4
 from sqlalchemy.orm import relationship
 
 

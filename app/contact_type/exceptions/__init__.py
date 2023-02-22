@@ -1,2 +1,2 @@
-import imp
-from .contact_type_exceptions import *
+
+from .contact_type_exceptions import ContactTypeNotFound, ContactTypeExists

@@ -1,10 +1,10 @@
 from pydantic import BaseModel
-from app.appointment.schemas import AppointmentSchema
+from app.user.schemas import UserSchema
 from app.service_type.schemas import ServiceTypeSchema
 
-class AppointmentServiceTypeSchema(BaseModel):
-    appointment_id: str
-    appointment_id: AppointmentSchema
+class UserServiceTypeSchema(BaseModel):
+    user_id: str
+    user: UserSchema
     service_type_id: str
     service_type_id: ServiceTypeSchema
 
@@ -13,8 +13,8 @@ class AppointmentServiceTypeSchema(BaseModel):
         orm_mode = True
 
 
-class AppointmentServiceTypeSchemaIn(BaseModel):
-    appointment_id: str
+class UserServiceTypeSchemaIn(BaseModel):
+    user_id: str
     service_type_id: str
     
     class Config:

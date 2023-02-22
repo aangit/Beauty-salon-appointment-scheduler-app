@@ -1,5 +1,4 @@
 from app.db.database import SessionLocal
-from app.appointment.repository.appointment_repository import AppointmentRepository
 from app.appointment_service_type.repository import AppointmentServiceTypeRepository
 
 class AppointmentServiceTypeServices:

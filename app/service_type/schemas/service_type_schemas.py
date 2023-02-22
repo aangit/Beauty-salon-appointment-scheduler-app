@@ -22,3 +22,14 @@ class ServiceTypeSchemaIn(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class UpdateServiceTypeSchemaIn(BaseModel):
+    service_name: str | None = None
+    approximate_duration: time | None = None
+    price: float | None = None
+    available_at: datetime | None = None
+    
+    
+    class Config:
+        orm_mode = True

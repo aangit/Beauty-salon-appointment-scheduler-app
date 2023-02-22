@@ -11,6 +11,8 @@ from app.contact.routes import contact_router
 from app.appointment.routes import appointment_router
 from app.service_type.routes import service_type_router
 from app.appointment_service_type.routes import appointment_service_type_router
+from app.user_service_type.routes import user_service_type_router
+
 
 Base.metadata.create_all(bind=engine)
 
@@ -24,6 +26,8 @@ def init_app():
     app.include_router(appointment_router)
     app.include_router(service_type_router)
     app.include_router(appointment_service_type_router)
+    app.include_router(user_service_type_router)
+
     return app
 
 app = init_app()

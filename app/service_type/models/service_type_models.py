@@ -13,6 +13,7 @@ class ServiceType(Base):
     available_at = Column(DateTime)
 
     appointments = relationship('Appointment', secondary='appointmentservicetype', back_populates='service_types', lazy = 'subquery')
+    users = relationship('User', secondary='userservicetype', back_populates='service_types', lazy = 'subquery')
 
     def __init__(self, service_name, approximate_duration, price, available_at):
         self.service_name = service_name
