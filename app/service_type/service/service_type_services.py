@@ -76,6 +76,8 @@ class ServiceTypeServices:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
                 stored_service_type_data = service_type_repository.read_service_type_by_id(service_type_id)
+                if not stored_service_type_data:
+                    raise ServiceTypeNotFound(message="Service type not found.", code=404)
                 stored_service_type_model = UpdateServiceTypeSchemaIn(**jsonable_encoder(stored_service_type_data))
                 update_data = service_type.dict(exclude_unset=True)
                 updated_service_type = stored_service_type_model.copy(update=update_data)

@@ -1,1 +1,1 @@
-from .user_exceptions import UserInvalidPassword, UserNotFound, UserInvalidEmail, UserNotEmployee, UserNotClient, ClientNotFound, EmployeeNotFound
+from .user_exceptions import UserInvalidPassword, UserNotFound, UserInvalidEmail, UserNotEmployee, UserNotClient, ClientNotFound, EmployeeNotFound, UserNotAuthorized

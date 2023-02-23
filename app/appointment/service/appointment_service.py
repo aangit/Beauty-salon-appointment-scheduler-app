@@ -8,10 +8,10 @@ from fastapi.encoders import jsonable_encoder
 from app.status.exceptions import StatusNotFoundException
 from app.status.repository import StatusRepository
 from app.user.repository import UserRepository
-from app.user.exceptions import UserNotEmployee, UserNotClient, ClientNotFound, EmployeeNotFound, UserNotFound
+from app.user.exceptions import UserNotEmployee, UserNotClient, ClientNotFound, EmployeeNotFound, UserNotFound, UserNotAuthorized
 from typing import List, Type
 from app.service_type.exceptions import ServiceTypeNotFound
-
+from app.appointment.exceptions import AppointmentNotFound
 
 
 class AppointmentServices:
@@ -58,32 +58,39 @@ class AppointmentServices:
                 raise e
 
     @staticmethod
-    def get_appointments_by_client_id(client_id: str) -> Type[Appointment]:
+    def get_appointments_by_client_id(client_id: str, user_id: str) -> Type[Appointment]:
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
                 user = user_repository.get_user_by_id(client_id)
-                if not user:
-                    raise UserNotFound(message=f"User with provided id {client_id} does not exist", code=404)
+                if user is None:
+                    raise UserNotFound(message="User with provided id does not exist", code=404)
+                if user.id != user_id:
+                    raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
                 if user.user_type.user_type != "customer":
                     raise UserNotClient(
                         message="Unknown user.", code=400)
                 appointment_repository = AppointmentRepository(db)
                 appointments = appointment_repository.get_appointments_by_client_id(
                     client_id)
+                if not appointments:
+                    raise AppointmentNotFound(message="This user has no appointments.", code=404)
+                
                 return appointments
 
             except Exception as e:
                 raise e
 
     @staticmethod
-    def get_all_appointments_by_employee_id_and_status(employee_id: str, status_id: str) -> Type[Appointment]:
+    def get_all_appointments_by_employee_id_and_status(employee_id: str, status_id: str, user_id: str ) -> Type[Appointment]:
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
                 employee_user = user_repository.get_user_by_id(employee_id)
                 if not employee_user:
                     raise EmployeeNotFound(message="Employee not found", code=404)
+                if employee_user.id != user_id:
+                    raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
                 if employee_user.user_type.user_type != "employee":
                     raise UserNotEmployee(message="User is not an employee.", code=404)
                 appointment_repository = AppointmentRepository(db)
@@ -93,20 +100,32 @@ class AppointmentServices:
                     raise StatusNotFoundException(message="Requested status not found.", code=404)
                 appointments = appointment_repository.get_all_appointments_by_employee_id_and_status(
                     employee_id, status_id)
+                if not appointments:
+                    raise AppointmentNotFound(message="This user has no appointments.", code=404)
                 return appointments
             except Exception as e:
                 raise e
 
     @staticmethod
-    def get_all_pending_appointments_by_employee_id_for_date(employee_id: str, status_id: str, appointment_datetime: str = None) -> Type[Appointment]:
+    def get_all_appointments_by_employee_id_by_status_for_date(employee_id: str, status_id: str, user_id: str ,appointment_datetime: str = None ) -> Type[Appointment]:
         with SessionLocal() as db:
             try:
                 appointment_repository = AppointmentRepository(db)
                 status_repository = StatusRepository(db)
+                user_repository = UserRepository(db)
+                employee = user_repository.get_user_by_id(employee_id)
+                if employee is None:
+                    raise UserNotFound(message="User not found.", code=404)
+                if employee_id != user_id:
+                    raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
                 id_status = status_repository.read_status_by_id(status_id)
+                if id_status is None:
+                    raise StatusNotFoundException(message="Requested status not found.", code=404)
                 status_id = id_status.id
-                appointments = appointment_repository.get_all_pending_appointments_by_employee_id_for_date(
+                appointments = appointment_repository.get_all_appointments_by_employee_id_by_status_for_date(
                     employee_id, status_id, appointment_datetime)
+                if not appointments:
+                    raise AppointmentNotFound(message="This user has no appointments.", code=404)
                 return appointments
             except Exception as e:
                 raise e
@@ -142,12 +161,14 @@ class AppointmentServices:
                 appointment_repository = AppointmentRepository(db)
                 appointment = appointment_repository.get_appointment_by_id(
                     appointment_id)
+                if not appointment:
+                    raise AppointmentNotFound(message="Appointment not found.", code=404)
                 if appointment.client_id != user_id:
-                    raise ValueError(
-                        "User is not authorized to cancel this appointment")
+                    raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
                 return appointment_repository.cancel_appointement(appointment_id)
             except Exception as e:
                 raise e
+
 
     @staticmethod
     def accept_appointment(appointment_id: str, user_id: str):
@@ -156,20 +177,33 @@ class AppointmentServices:
                 appointment_repository = AppointmentRepository(db)
                 appointment = appointment_repository.get_appointment_by_id(
                     appointment_id)
+                if not appointment:
+                    raise AppointmentNotFound(message="Appointment not found.", code=404)
                 if appointment.employee_id != user_id:
-                    raise ValueError(
-                        "User is not authorized to cancel this appointment")
+                     raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
                 return appointment_repository.accept_appointment(appointment_id)
             except Exception as e:
                 raise e
 
     @staticmethod
-    def update_appointment_by_id(appointment_id: str, appointment):
+    def update_appointment_by_id(appointment_id: str, appointment, user_id: str):
         try:
             with SessionLocal() as db:
                 appointment_repository = AppointmentRepository(db)
+                user_repository = UserRepository(db)
+                status_repository = StatusRepository(db)
                 stored_appointment_data = appointment_repository.get_appointment_by_id(
                     appointment_id)
+                if not stored_appointment_data:
+                    raise AppointmentNotFound(message="Appointment not found.", code=404)
+                if stored_appointment_data.employee_id != user_id:
+                    raise UserNotAuthorized(message="User is not authorized to access data.", code=401)
+                if appointment.client_id and not user_repository.get_user_by_id(appointment.client_id):
+                    raise UserNotFound(message="Client not found.", code=404)
+                if appointment.employee_id and not user_repository.get_user_by_id(appointment.employee_id):
+                    raise UserNotFound(message="Employee not found.", code=404)
+                if appointment.status_id and not status_repository.read_status_by_id(appointment.status_id):
+                    raise StatusNotFoundException(message="Status not found.", code=404)
                 stored_appointment_model = UpdateAppointmentSchemaIn(
                     **jsonable_encoder(stored_appointment_data))
                 update_data = appointment.dict(exclude_unset=True)

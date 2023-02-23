@@ -96,5 +96,8 @@ class ServiceTypeController:
         try:
             ServiceTypeServices.update_service_type_by_id(service_type_id, service_type)        
             return Response(content=f"Service type with id - {service_type_id} is updated")
+        except ServiceTypeNotFound as e:
+            raise HTTPException(status_code=e.code, detail=e.message)
         except Exception as e:
             raise HTTPException(status_code=400, detail=str(e))
+

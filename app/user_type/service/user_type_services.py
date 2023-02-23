@@ -21,7 +21,9 @@ class UserTypeServices:
         try:
             with SessionLocal() as db:
                 user_type_repository = UserTypeRepository(db)
-                return user_type_repository.read_user_type_by_id(user_type_id)
+                user_type = user_type_repository.read_user_type_by_id(user_type_id)
+                if user_type is None:
+                    raise UserTypeNotFoundException(message="User type not found.", code=404)
         except Exception as e:
             raise e
 
@@ -36,7 +38,7 @@ class UserTypeServices:
         try:
             with SessionLocal() as db:
                 user_type_repository = UserTypeRepository(db)
-                user_type_repository.delete_user_type_by_id(user_type_id)      
+                user_type_repository.delete_user_type_by_id(user_type_id)
         except Exception as e:
             raise e
 

@@ -58,48 +58,6 @@ class ServiceTypeRepository:
         else:
             raise ServiceTypeNotFound(f"Employee for {service_name} not found.", 400)
 
-
-    # def read_users_per_service_type_name(self, service_name: str):
-    #     search_terms = service_name.split()
-    #     service_types = self.db.query(ServiceType).filter(or_(*[ServiceType.service_name.ilike(f"%{term}%") for term in search_terms])).all()
-    #     users = set(service_types[0].users) if service_types else set()
-    #     for service_type in service_types:
-    #         users = users.intersection(set(service_type.users))
-    #     if users:
-    #         return list(users)
-    #     else:
-    #         raise ServiceTypeNotFoundException(f"Employee for {service_name} not found.", 400)
-
-    # def read_users_per_service_type_name(self, service_type_names: List[str]):
-    #     search_terms = [name.lower() for name in service_type_names]
-    #     service_types = self.db.query(ServiceType).filter(ServiceType.service_name.ilike(search_terms[0]))
-    #     for term in search_terms[1:]:
-    #         service_types = service_types.filter(ServiceType.service_name.ilike(f'%{term}%'))
-    #     service_types = service_types.all()
-
-    #     users = None
-    #     for service_type in service_types:
-    #         if users is None:
-    #             users = set(service_type.users)
-    #         else:
-    #             users = users.intersection(service_type.users)
-
-    #     if users:
-    #         return users
-    #     else:
-    #         raise ServiceTypeNotFoundException(f"Users for {', '.join(service_type_names)} not found.", 400)
-
-    # def read_users_per_service_type_name(self, service_name: str):
-    #     search_terms = service_name.split()
-    #     service_types = self.db.query(ServiceType).filter(or_(*[ServiceType.service_name.ilike(f"%{term}%") for term in search_terms])).all()
-    #     users = set()
-    #     for user in set(service_types[0].users) if service_types else set():
-    #         if all(term in [service_type.service_name for service_type in user.service_types] for term in search_terms):
-    #             users.add(user)
-    #     if users:
-    #         return list(users)
-    #     else:
-    #         raise ServiceTypeNotFoundException(f"Employee for {service_name} not found.", 400)
             
     def delete_service_type_by_id(self, service_type_id: str):
         try:

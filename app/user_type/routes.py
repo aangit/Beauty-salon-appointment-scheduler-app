@@ -16,7 +16,7 @@ def get_user_type_by_id(user_type_id: str):
     return UserTypeController.get_user_type_by_id(user_type_id)          
 
 
-@user_type_router.get("/get-all-user-types", response_model=list[UserTypeSchema], dependencies=[Depends(JWTBearer(["super_user"]))])
+@user_type_router.get("/get-all-user-types", response_model=list[UserTypeSchema], dependencies=[Depends(JWTBearer("super_user"))])
 def get_all_user_types():
     return UserTypeController.get_all_user_types()
 

@@ -43,3 +43,5 @@ def delete_service_type_by_id(service_type_id: str):
 @service_type_router.patch("/update-service-type", response_model = ServiceTypeSchema, dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
 def update_service_type_by_id(service_type_id: str, service_type: UpdateServiceTypeSchemaIn):
     return ServiceTypeController.update_service_type_by_id(service_type_id, service_type)
+
+

@@ -20,8 +20,6 @@ class UserTypeRepository:
 
     def read_user_type_by_id(self, user_type_id: str):
         user_type= self.db.query(UserType).filter(UserType.id == user_type_id).first()
-        if user_type is None:
-            raise UserTypeNotFoundException(f"User type with provided ID: {user_type_id} not found.", 400)
         return user_type
 
     def read_user_type_by_type(self, user_type: str):
@@ -36,7 +34,7 @@ class UserTypeRepository:
         try:
             user_type = self.db.query(UserType).filter(UserType.id == user_type_id).first()
             if user_type is None:
-                raise UserTypeNotFoundException(f"User type with provided ID: {user_type_id} not found", 400)
+                raise UserTypeNotFoundException(f"User type with provided ID: {user_type_id} not found", 404)
             self.db.delete(user_type)
             self.db.commit()
             return True
@@ -47,7 +45,7 @@ class UserTypeRepository:
         try:
             u_type = self.db.query(UserType).filter(UserType.id == user_type_id).first()
             if u_type is None:
-                raise UserTypeNotFoundException(f"User type with provided ID: {user_type_id} not found", 400) 
+                raise UserTypeNotFoundException(f"User type with provided ID: {user_type_id} not found", 404) 
             u_type.user_type = user_type
             self.db.add(u_type)
             self.db.commit()

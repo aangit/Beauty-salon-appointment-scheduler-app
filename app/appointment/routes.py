@@ -16,22 +16,22 @@ def create_appointment(appointment: AppointmentSchemaIn):
 def get_appointment_by_id(appointment_id: str):
     return AppointmentController.get_appointment_by_id(appointment_id) 
 
-@appointment_router.get("/get-all-appointments-for-user", response_model= list[AppointmentSchema], dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
-def get_appointments_by_client_id(client_id: str):
-    return AppointmentController.get_appointments_by_client_id(client_id)
+@appointment_router.get("/get-all-appointments-for-user", response_model= list[AppointmentSchema]) #dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
+def get_appointments_by_client_id(client_id: str, credentials = Depends(JWTBearer("customer"))):
+    return AppointmentController.get_appointments_by_client_id(client_id, credentials["user_id"])
 
 
-@appointment_router.get("/get-all-appointments-by-employee-and-status", response_model= list[AppointmentSchema], dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
-def get_all_appointments_by_employee_id_and_status(employee_id: str, status_id):
-    return AppointmentController.get_all_appointments_by_employee_id_and_status(employee_id, status_id)
+@appointment_router.get("/get-all-appointments-by-employee-and-status", response_model= list[AppointmentSchema]) #dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
+def get_all_appointments_by_employee_id_and_status(employee_id: str, status_id, credentials = Depends(JWTBearer("employee"))):
+    return AppointmentController.get_all_appointments_by_employee_id_and_status(employee_id, status_id, credentials["user_id"])
 
 
-@appointment_router.get("/get-all-pending-appointment-for-employee-for-date", response_model= list[AppointmentSchema], dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
-def get_all_pending_appointments_by_employee_id_for_date(employee_id: str, status_id, appointment_datetime: str = None):
-    return AppointmentController.get_all_pending_appointments_by_employee_id_for_date(employee_id, status_id, appointment_datetime)
+@appointment_router.get("/get-all-appointment-for-employee-by-status-for-date", response_model= list[AppointmentSchema])# dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
+def get_all_appointments_by_employee_id_by_status_for_date(employee_id: str, status_id, appointment_datetime: str = None, credentials = Depends(JWTBearer("employee"))):
+    return AppointmentController.get_all_appointments_by_employee_id_by_status_for_date(employee_id, status_id, credentials["user_id"], appointment_datetime )
 
 
-@appointment_router.get("/get-all-appointments", response_model=list[AppointmentSchema], dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
+@appointment_router.get("/get-all-appointments", response_model=list[AppointmentSchema], dependencies=[Depends(JWTBearer("super_user"))])
 def get_all_appointments():
     return AppointmentController.get_all_appointments()
 
@@ -41,13 +41,13 @@ def delete_appointment_by_id(appointment_id: str):
 
 @appointment_router.put("/cancel-appointment", response_model = AppointmentSchema)
 def cancel_appointement(appointment_id: str, credentials = Depends(JWTBearer("customer"))):
-    return AppointmentController.cancel_appointement(appointment_id, credentials)
+    return AppointmentController.cancel_appointement(appointment_id, credentials["user_id"])
 
 @appointment_router.put("/accept-appointment", response_model = AppointmentSchema)
 def accept_appointment(appointment_id: str, credentials = Depends(JWTBearer("employee"))):
-    return AppointmentController.accept_appointment(appointment_id, credentials)
+    return AppointmentController.accept_appointment(appointment_id, credentials["user_id"])
 
 
-@appointment_router.patch("/update-appointment", response_model = AppointmentSchema, dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
-def update_appointment_by_id(appointment_id: str, appointment: UpdateAppointmentSchemaIn):
-    return AppointmentController.update_appointment_by_id(appointment_id, appointment)
+@appointment_router.patch("/update-appointment", response_model = AppointmentSchema) #dependencies=[Depends(JWTBearer(["super_user", "employee"]))])
+def update_appointment_by_id(appointment_id: str, appointment: UpdateAppointmentSchemaIn, credentials = Depends(JWTBearer("employee"))):
+    return AppointmentController.update_appointment_by_id(appointment_id, appointment, credentials["user_id"])

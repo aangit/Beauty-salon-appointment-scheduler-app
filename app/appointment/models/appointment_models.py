@@ -1,5 +1,4 @@
-from email.policy import default
-from http import client
+
 from app.db.database import Base
 from sqlalchemy import Column, String, ForeignKey, DateTime
 from uuid import uuid4

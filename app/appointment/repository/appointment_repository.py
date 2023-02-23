@@ -28,7 +28,7 @@ class AppointmentRepository:
     def get_all_appointments_by_employee_id_and_status(self, employee_id : str, status_id: str):
         return self.db.query(Appointment).filter(Appointment.employee_id == employee_id, Appointment.status_id == status_id).all()
 
-    def get_all_pending_appointments_by_employee_id_for_date(self, employee_id : str, status_id: str, appointment_datetime: str = None):
+    def get_all_appointments_by_employee_id_by_status_for_date(self, employee_id : str, status_id: str, appointment_datetime: str = None):
         return self.db.query(Appointment).filter(Appointment.employee_id == employee_id, Appointment.status_id == status_id, func.date(Appointment.appointment_datetime) == appointment_datetime).all()
 
 

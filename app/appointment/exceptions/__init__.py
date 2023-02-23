@@ -1,0 +1,1 @@
+from .appointment_exceptions import AppointmentNotFound
