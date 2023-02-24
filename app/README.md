@@ -44,4 +44,8 @@ Appointment Service Type is an intertable between appointment and service type (
 
 ## User Service Type
 
-User Service Type is as well an intertable, but between user and service type. In this case, user is an employee, and this way we know which employee is skilled for which service. So, when creating an appointment, if an employee doesn't have the necessary skill (service type), it is inpossible to create an appointment. 
+User Service Type is as well an intertable, but between user and service type. In this case, user is an employee, and this way we know which employee is skilled for which service. So, when creating an appointment, if an employee doesn't have the necessary skill (service type), it is inpossible to create an appointment.
+
+## In progress work 
+
+One of the goals would be to create a timestamps. The first idea is to create Day of week table, where in day of week column would be inserted the days of week, and then an intertable User day of week, which would be in many to many relationship with the User and Day of week table, and it would connect an employee with the days of week he or she is available. That table would contain as well start and end (for example start and end of employee's shift).
