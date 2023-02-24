@@ -16,6 +16,15 @@ class UserServices:
 
     @staticmethod
     def create_user(email, password: str, user_type_id):
+        """
+        It creates a user in the database
+        
+        :param email: str
+        :param password: str
+        :type password: str
+        :param user_type_id: 1
+        :return: The return value is the user_id of the newly created user.
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -27,6 +36,13 @@ class UserServices:
 
     @staticmethod
     def create_super_user(email, password):
+        """
+        It creates a super user with the given email and password
+        
+        :param email: the email of the user
+        :param password: "password"
+        :return: The return value is the user object that was created.
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -38,6 +54,13 @@ class UserServices:
 
     @staticmethod
     def get_user_by_id(user_id: str):
+        """
+        It gets a user by id
+        
+        :param user_id: str
+        :type user_id: str
+        :return: A user object
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -47,12 +70,25 @@ class UserServices:
 
     @staticmethod
     def get_all_users():
+        """
+        It creates a database session, creates a user repository, and then calls the get_all_users()
+        function on the user repository.
+        :return: A list of User objects
+        """
         with SessionLocal() as db:
             user_repository = UserRepository(db)
             return user_repository.get_all_users()
 
     @staticmethod
     def delete_user_by_id(user_id: str):
+        """
+        It deletes a user from the database by their user_id
+        
+        :param user_id: str
+        :type user_id: str
+        :return: The return value is the result of the delete_user_by_id method in the UserRepository
+        class.
+        """
         try:
             with SessionLocal() as db:
                 user_repository = UserRepository(db)
@@ -63,6 +99,17 @@ class UserServices:
 
     @staticmethod
     def login_user(email: str, password: str):
+        """
+        It takes an email and password, checks if the email exists in the database, if it does, it
+        checks if the password matches the password in the database, if it does, it returns the user
+        object
+        
+        :param email: str
+        :type email: str
+        :param password: str = "password"
+        :type password: str
+        :return: The user object
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -77,6 +124,13 @@ class UserServices:
 
     @staticmethod
     def get_all_users_by_type(user_type_id: str) -> Type[User]:
+        """
+        It gets all users by type
+        
+        :param user_type_id: str
+        :type user_type_id: str
+        :return: A list of User objects.
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -87,6 +141,18 @@ class UserServices:
 
     @staticmethod
     def assign_skill_to_employee(employee_id: str, service_type_ids: List[str]):
+        """
+        It takes an employee id and a list of service type ids and assigns the service types to the
+        employee.
+
+        So far it is only possible by super_user, will be changed when the application evolves.
+        
+        :param employee_id: str
+        :type employee_id: str
+        :param service_type_ids: List[str]
+        :type service_type_ids: List[str]
+        :return: The employee object with the new service_types added to it.
+        """
         with SessionLocal() as db:
             user_repository = UserRepository(db)
             service_type_repository = ServiceTypeRepository(db)
@@ -108,6 +174,16 @@ class UserServices:
 
     @staticmethod
     def remove_skills_from_employee(employee_id: str, service_type_ids: List[str]):
+        """
+        It removes a list of service types from an employee.
+        So far it is only possible by super_user, will be changed when the application evolves.
+
+        :param employee_id: str
+        :type employee_id: str
+        :param service_type_ids: List[str]
+        :type service_type_ids: List[str]
+        :return: The employee object
+        """
         with SessionLocal() as db:
             user_repository = UserRepository(db)
             service_type_repository = ServiceTypeRepository(db)
@@ -130,6 +206,14 @@ class UserServices:
 
     @staticmethod
     def employee_has_skills(employee_id:str):
+        """
+        It returns a list of service types that an employee has skills in.
+        So far it is only possible by super_user, will be changed when the application evolves.
+        
+        :param employee_id: str
+        :type employee_id: str
+        :return: A list of service types
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)

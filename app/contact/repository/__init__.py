@@ -1,1 +1,1 @@
-from .contact_repository import Contact
+from .contact_repository import ContactRepository

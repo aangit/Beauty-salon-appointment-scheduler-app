@@ -6,8 +6,19 @@ from fastapi.encoders import jsonable_encoder
 from app.service_type.exceptions import ServiceTypeNotFound
 
 class ServiceTypeServices:
+
     @staticmethod
     def create_service_type(service_name, approximate_duration, price, available_at):
+        """
+        It creates a service type if it doesn't exist in the database
+        
+        :param service_name: str
+        :param approximate_duration: int
+        :param price: Decimal(precision=2, scale=2)
+        :param available_at: [{'day': 'Monday', 'start_time': '09:00', 'end_time': '17:00'}, {'day':
+        'Tuesday', 'start_time': '09:00', 'end_time': '17:00'}, {'day
+        :return: The return value is the newly created service type.
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
@@ -20,6 +31,13 @@ class ServiceTypeServices:
 
     @staticmethod
     def read_service_type_by_id(service_type_id: str):
+        """
+        It reads a service type by id
+        
+        :param service_type_id: str
+        :type service_type_id: str
+        :return: A ServiceType object
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
@@ -29,6 +47,13 @@ class ServiceTypeServices:
 
     @staticmethod
     def read_service_type_by_name_partially(service_name: str):
+        """
+        It reads a service type by name partially
+        
+        :param service_name: str
+        :type service_name: str
+        :return: A list of ServiceType objects
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
@@ -39,6 +64,10 @@ class ServiceTypeServices:
     
     @staticmethod
     def read_all_service_types():
+        """
+        It reads all service types from the database.
+        :return: A list of ServiceType objects
+        """
         with SessionLocal() as db:
             service_type_repository = ServiceTypeRepository(db)
             return service_type_repository.read_all_service_types()
@@ -46,6 +75,13 @@ class ServiceTypeServices:
 
     @staticmethod
     def user_has_service_type(service_type_id: str):
+        """
+        It checks if the user has a service type with the given id
+        
+        :param service_type_id: str
+        :type service_type_id: str
+        :return: A boolean value
+        """
         with SessionLocal() as db:
             service_type_repository = ServiceTypeRepository(db)
             return service_type_repository.user_has_service_type(service_type_id)
@@ -53,6 +89,13 @@ class ServiceTypeServices:
 
     @staticmethod
     def read_users_per_service_type_name(service_name: str):
+        """
+        It reads the users per service type name.
+        
+        :param service_name: str
+        :type service_name: str
+        :return: A list of users
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
@@ -62,6 +105,12 @@ class ServiceTypeServices:
     
     @staticmethod
     def delete_service_type_by_id(service_type_id: str):
+        """
+        It deletes a service type by id
+        
+        :param service_type_id: str
+        :type service_type_id: str
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)
@@ -72,6 +121,15 @@ class ServiceTypeServices:
 
     @staticmethod
     def update_service_type_by_id(service_type_id: str, service_type):
+        """
+        It takes in a service type id, and a service type object, and updates the service type in the
+        database
+        
+        :param service_type_id: str
+        :type service_type_id: str
+        :param service_type: ServiceTypeOut
+        :return: The return value is a tuple of the form (rowcount, lastrowid)
+        """
         try:
             with SessionLocal() as db:
                 service_type_repository = ServiceTypeRepository(db)

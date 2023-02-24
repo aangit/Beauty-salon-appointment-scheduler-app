@@ -18,6 +18,17 @@ class AppointmentServices:
 
     @staticmethod
     def create_appointment(appointment_datetime, client_id, employee_id, service_types: List[str]):
+        """
+        It creates an appointment, and then creates a relationship between the appointment and the
+        service types.
+        
+        :param appointment_datetime: datetime.datetime
+        :param client_id: 1
+        :param employee_id: 1
+        :param service_types: List[str]
+        :type service_types: List[str]
+        :return: The appointment object
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -59,6 +70,15 @@ class AppointmentServices:
 
     @staticmethod
     def get_appointments_by_client_id(client_id: str, user_id: str) -> Type[Appointment]:
+        """
+        It gets all appointments for a client by client id and checks if the client is authorized to perform an action by login credentials - user id
+        
+        :param client_id: str, user_id: str
+        :type client_id: str
+        :param user_id: str = the user id of the user who is making the request
+        :type user_id: str
+        :return: A list of Appointment objects.
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -83,6 +103,17 @@ class AppointmentServices:
 
     @staticmethod
     def get_all_appointments_by_employee_id_and_status(employee_id: str, status_id: str, user_id: str ) -> Type[Appointment]:
+        """
+        It gets all appointments by employee id and status and checks if the employee is authorized to perform an action by login credentials - user id
+        
+        :param employee_id: str, status_id: str, user_id: str
+        :type employee_id: str
+        :param status_id: str
+        :type status_id: str
+        :param user_id: str = the user id of the user making the request
+        :type user_id: str
+        :return: A list of Appointment objects.
+        """
         with SessionLocal() as db:
             try:
                 user_repository = UserRepository(db)
@@ -108,6 +139,19 @@ class AppointmentServices:
 
     @staticmethod
     def get_all_appointments_by_employee_id_by_status_for_date(employee_id: str, status_id: str, user_id: str ,appointment_datetime: str = None ) -> Type[Appointment]:
+        """
+        This function returns all appointments for a given employee, status, and date and checks if the employee is authorized to perform an action by login credentials - user id
+        
+        :param employee_id: str, status_id: str, user_id: str ,appointment_datetime: str = None
+        :type employee_id: str
+        :param status_id: str = "1"
+        :type status_id: str
+        :param user_id: str = the user id of the user who is making the request
+        :type user_id: str
+        :param appointment_datetime: str = None
+        :type appointment_datetime: str
+        :return: A list of appointments
+        """
         with SessionLocal() as db:
             try:
                 appointment_repository = AppointmentRepository(db)
@@ -132,6 +176,13 @@ class AppointmentServices:
 
     @staticmethod
     def get_appointment_by_id(appointment_id: str):
+        """
+        It gets an appointment by id
+        
+        :param appointment_id: str
+        :type appointment_id: str
+        :return: A list of Appointment objects
+        """
         with SessionLocal() as db:
             try:
                 appointment_repository = AppointmentRepository(db)
@@ -141,12 +192,24 @@ class AppointmentServices:
 
     @staticmethod
     def get_all_appointments():
+        """
+        It creates a database session, creates an appointment repository, and then calls the
+        get_all_appointments() function on the repository.
+        :return: A list of Appointment objects
+        """
         with SessionLocal() as db:
             appointment_repository = AppointmentRepository(db)
             return appointment_repository.get_all_appointments()
 
     @staticmethod
     def delete_appointment_by_id(appointment_id: str):
+        """
+        It deletes an appointment from the database by its id.
+        
+        :param appointment_id: str
+        :type appointment_id: str
+        :return: The return value is the number of rows deleted.
+        """
         try:
             with SessionLocal() as db:
                 appointment_repository = AppointmentRepository(db)
@@ -156,6 +219,15 @@ class AppointmentServices:
 
     @staticmethod
     def cancel_appointement(appointment_id: str, user_id: str):
+        """
+        It cancels an appointment if the appointment exists and if the client is authorized to cancel it
+        
+        :param appointment_id: str
+        :type appointment_id: str
+        :param user_id: str
+        :type user_id: str
+        :return: The return value is the result of the cancel_appointement method.
+        """
         with SessionLocal() as db:
             try:
                 appointment_repository = AppointmentRepository(db)
@@ -172,6 +244,17 @@ class AppointmentServices:
 
     @staticmethod
     def accept_appointment(appointment_id: str, user_id: str):
+        """
+        It accepts an appointment_id and user_id, checks if the appointment exists, if it does, it
+        checks if the user is authorized to access the appointment, if the user is authorized, it
+        returns the appointment.
+        
+        :param appointment_id: str
+        :type appointment_id: str
+        :param user_id: str = the id of the user who is accepting the appointment
+        :type user_id: str
+        :return: The return value is the result of the accept_appointment method.
+        """
         with SessionLocal() as db:
             try:
                 appointment_repository = AppointmentRepository(db)
@@ -187,6 +270,17 @@ class AppointmentServices:
 
     @staticmethod
     def update_appointment_by_id(appointment_id: str, appointment, user_id: str):
+        """
+        It takes an appointment_id, appointment, and user_id (checks if the user is authorized to access the appointment, if the user is authorized, it
+        updates the appointment) as parameters, and returns an updated appointment.
+
+        :param appointment_id: str
+        :type appointment_id: str
+        :param appointment: AppointmentCreate
+        :param user_id: str 
+        :type user_id: str
+        :return: The return value is the updated appointment.
+        """
         try:
             with SessionLocal() as db:
                 appointment_repository = AppointmentRepository(db)
